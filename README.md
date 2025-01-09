@@ -9,6 +9,7 @@ Welcome to the **Vocdoni Circuit Artifacts** repository! This repository houses 
 - [Installation](#installation)
 - [Usage](#usage)
   - [Generating Artifacts](#generating-artifacts)
+  - [Updating Dependencies](#updating-dependencies)
 - [Artifacts](#artifacts)
 - [References](#references)
 
@@ -128,6 +129,17 @@ Use the up and down arrow keys to navigate through the options and press Enter t
     aggregator.vk hash: <hash_value>
     Aggregator hashes logged successfully in ./aggregator/aggregator_hashes.txt
 ```
+
+## Updating Dependencies
+If there's an updated version of the vocdoni-z-sandbox repository (e.g., a new commit or a different branch), you'll need to update the dependency in your project and regenerate the artifacts to incorporate the latest changes.
+
+### Steps to Update Dependency and Regenerate Artifacts
+1. **Update the Dependency:** Use go get to fetch the latest version or switch to a specific branch of the vocdoni-z-sandbox repository. 
+    - To update to the latest commit on the default branch: `go get -u github.com/vocdoni/vocdoni-z-sandbox`
+    - To switch to a specific branch (e.g., new-feature-branch): `go get github.com/vocdoni/vocdoni-z-sandbox@new-feature-branch`
+    - To update to a specific commit (e.g., abcdef123456): `go get github.com/vocdoni/vocdoni-z-sandbox@abcdef123456`
+2. **Verify the Update:** Ensure that the `go.mod` and `go.sum` files reflect the updated dependency version: `go mod tidy`
+3. **Regenerate Artifacts:** After updating the dependency, rerun the CLI tool to regenerate the artifacts with the latest changes. Ensure that the artifacts have been updated in their respective directories (`./voteverifier` and `./aggregator`) and that the corresponding hash log files have been refreshed with the new SHA256 hashes.
 
 ## Artifacts
 All generated artifacts and their corresponding hash files are stored within the [`./voteverifier`](./voteverifier) directory. Below is an overview of the included files:
