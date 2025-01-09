@@ -147,8 +147,6 @@ All generated artifacts and their corresponding hash files are stored within the
  - [`aggregator_hashes.txt`](./aggregator/aggregator_hashes.txt): SHA256 hashes of the above artifacts.
 
 ## References
- - Backend Repository: vocdoni-sequencer
- This repository utilizes the artifacts generated in this repository to validate and aggregate votes within the Vocdoni DaVinci Protocol.
+ - DaVinci Sequencer Repository: [vocdoni-sequencer](https://github.com/vocdoni/vocdoni-sequencer) - This repository utilizes the artifacts generated in this repository to validate and aggregate votes within the Vocdoni DaVinci Protocol.
 
- - Circom Circuits Repository: z-ircuits
- Contains the Circom circuits for generating the Ballot Proof used by the Vote Verifier.
+ - Circom Circuits Repository: [z-ircuits](https://github.com/vocdoni/z-ircuits) - Contains the Circom circuits for generating the Ballot Proof used by the Vote Verifier.
