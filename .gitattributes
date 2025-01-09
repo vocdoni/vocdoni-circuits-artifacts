@@ -1,0 +1,5 @@
+*.pk filter=lfs diff=lfs merge=lfs -text
+*.vk filter=lfs diff=lfs merge=lfs -text
+*.ccs filter=lfs diff=lfs merge=lfs -text
+*.wasm filter=lfs diff=lfs merge=lfs -text
+*.zkey filter=lfs diff=lfs merge=lfs -text
