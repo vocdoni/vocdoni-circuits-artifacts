@@ -17,8 +17,10 @@ func Compile(ballotProofVKey []byte) (constraint.ConstraintSystem, error) {
 	}
 	// compile the circuit
 	return frontend.Compile(ecc.BLS12_377.ScalarField(), r1cs.NewBuilder, &voteverifier.VerifyVoteCircuit{
-		CircomVerificationKey:  placeholders.Vk,
-		CircomProof:            placeholders.Proof,
-		CircomPublicInputsHash: placeholders.Witness,
+		CircomProof: circuits.InnerProofBN254{
+			Proof:   placeholders.Proof,
+			Witness: placeholders.Witness,
+			VK:      placeholders.Vk,
+		},
 	})
 }

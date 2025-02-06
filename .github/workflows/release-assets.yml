@@ -1,0 +1,53 @@
+name: Create Release and Upload Assets
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*.[0-9]*.[0-9]*' # triggers on version tags like v1.2.3
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Check out the repository.
+      - name: checkout-repository
+        uses: actions/checkout@v4.2.2
+        with:
+          lfs: true
+      # Step 2: Create a GitHub release for the pushed tag.
+      - name: create-release
+        id: create_release
+        uses: actions/create-release@v1.1.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      # Step 3: Upload each non-Go file in aggregator and voteverifier as an individual asset.
+      - name: Upload non-Go assets individually
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # The upload_url provided by the create-release action includes a template segment; we strip that off.
+          UPLOAD_URL: ${{ steps.create_release.outputs.upload_url }}
+        run: |
+            # Remove templated part (e.g. {?name,label}) from the upload URL.
+            UPLOAD_URL="${UPLOAD_URL%\{*}"
+            echo "Using upload URL: $UPLOAD_URL"
+
+            # Find all files in aggregator and voteverifier that are not *.go files.
+            for file in $(find aggregator voteverifier -type f ! -name "*.go"); do
+                # Use the file name as the asset name (adjust if you want to include folder names).
+                ASSET_NAME=$(basename "$file")
+                # Determine the MIME type of the file.
+                CONTENT_TYPE=$(file --mime-type -b "$file")
+                echo "Uploading $file as $ASSET_NAME with content type $CONTENT_TYPE"
+                
+                # Upload the asset using curl.
+                curl --fail -X POST \
+                    -H "Authorization: token ${GITHUB_TOKEN}" \
+                    -H "Content-Type: ${CONTENT_TYPE}" \
+                    --data-binary @"$file" \
+                    "$UPLOAD_URL?name=${ASSET_NAME}"
+            done
