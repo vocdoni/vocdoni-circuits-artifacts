@@ -8,7 +8,7 @@ require (
 	github.com/consensys/gnark v0.11.1-0.20241210204654-a1e66c1d6b4d
 	github.com/consensys/gnark-crypto v0.16.0
 	github.com/manifoldco/promptui v0.9.0
-	github.com/vocdoni/vocdoni-z-sandbox v0.0.0-20250205151629-b0b49708f6ce
+	github.com/vocdoni/vocdoni-z-sandbox v0.0.0-20250206114113-928e9445868b
 )
 
 require (

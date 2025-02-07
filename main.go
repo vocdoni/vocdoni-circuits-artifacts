@@ -17,8 +17,11 @@ import (
 	"github.com/consensys/gnark/constraint"
 	"github.com/manifoldco/promptui"
 	"github.com/vocdoni/vocdoni-circuits-artifacts/aggregator"
+	"github.com/vocdoni/vocdoni-circuits-artifacts/dummy"
 	"github.com/vocdoni/vocdoni-circuits-artifacts/voteverifier"
 )
+
+const artifactBaseURL = "https://circuits.ams3.cdn.digitaloceanspaces.com/circuits/dev"
 
 func main() {
 	// Handle interrupt signals gracefully
@@ -33,6 +36,7 @@ func main() {
 
 	// Define fixed directories for artifacts
 	voteVerifierDest := filepath.Join("voteverifier")
+	dummyDest := filepath.Join("dummy")
 	aggregatorDest := filepath.Join("aggregator")
 
 	// Create artifact directories if they don't exist
@@ -49,8 +53,9 @@ func main() {
 			Label: "Select an option",
 			Items: []string{
 				"Generate Vote Verifier Artifacts",
+				"Generate Dummy Vote Verifier Artifacts",
 				"Generate Aggregator Artifacts",
-				"Generate Both",
+				"Generate All",
 				"Exit",
 			},
 		}
@@ -67,13 +72,21 @@ func main() {
 			if err := generateVoteVerifierArtifacts(voteVerifierDest); err != nil {
 				log.Printf("Error generating Vote Verifier artifacts: %v", err)
 			}
+		case "Generate Dummy Vote Verifier Artifacts":
+			if err := generateDummyArtifacts(dummyDest); err != nil {
+				log.Printf("Error generating Dummy artifacts: %v", err)
+			}
 		case "Generate Aggregator Artifacts":
 			if err := generateAggregatorArtifacts(aggregatorDest); err != nil {
 				log.Printf("Error generating Aggregator artifacts: %v", err)
 			}
-		case "Generate Both":
+		case "Generate All":
 			if err := generateVoteVerifierArtifacts(voteVerifierDest); err != nil {
 				log.Printf("Error generating Vote Verifier artifacts: %v", err)
+				break
+			}
+			if err := generateDummyArtifacts(dummyDest); err != nil {
+				log.Printf("Error generating Dummy artifacts: %v", err)
 				break
 			}
 			if err := generateAggregatorArtifacts(aggregatorDest); err != nil {
@@ -102,7 +115,7 @@ func logHashes(hashFileName string, hashes map[string]string, destination string
 
 	// Write each filename and its hash to the file
 	for filename, hash := range hashes {
-		line := fmt.Sprintf("%s %s\n", filename, hash)
+		line := fmt.Sprintf("%s/%s %s\n", artifactBaseURL, filename, hash)
 		if _, err := file.WriteString(line); err != nil {
 			return fmt.Errorf("failed to write to hash log file %s: %w", hashFilePath, err)
 		}
@@ -193,8 +206,8 @@ func generateVoteVerifierArtifacts(destination string) error {
 	return nil
 }
 
-// generateAggregatorArtifacts handles the generation of Aggregator artifacts
-func generateAggregatorArtifacts(destination string) error {
+// generateDummyArtifacts handles the generation of Aggregator artifacts
+func generateDummyArtifacts(destination string) error {
 	// Check if Vote Verifier artifacts exist
 	vvCSPath := filepath.Join("voteverifier", "voteverifier.ccs")
 	vvVkPath := filepath.Join("voteverifier", "voteverifier.vk")
@@ -212,10 +225,100 @@ func generateAggregatorArtifacts(destination string) error {
 		return fmt.Errorf("failed to open voteverifier.ccs: %w", err)
 	}
 	defer vvCSFile.Close()
-
 	vvCS := groth16.NewCS(ecc.BLS12_377)
 	if _, err := vvCS.ReadFrom(vvCSFile); err != nil {
 		return fmt.Errorf("failed to read voteverifier.ccs: %w", err)
+	}
+
+	// Read Vote Verifier Verifying Key
+	vvVkFile, err := os.Open(vvVkPath)
+	if err != nil {
+		return fmt.Errorf("failed to open voteverifier.vk: %w", err)
+	}
+	defer vvVkFile.Close()
+	vvVk := groth16.NewVerifyingKey(ecc.BLS12_377)
+	if _, err := vvVk.ReadFrom(vvVkFile); err != nil {
+		return fmt.Errorf("failed to read voteverifier.vk: %w", err)
+	}
+
+	// Initialize a map to store hashes
+	hashes := make(map[string]string)
+
+	// Compile Dummy circuit
+	dummyCS, dummyPk, dummyVk, err := dummy.Compile(vvCS)
+
+	// Write Dummy circuit constraints
+	dummycsHash, err := writeCS(dummyCS, filepath.Join(destination, "dummy.ccs"))
+	if err != nil {
+		return fmt.Errorf("failed to write dummy.ccs: %w", err)
+	}
+	fmt.Printf("dummy.ccs hash: %s\n", dummycsHash)
+	hashes["dummy.ccs"] = dummycsHash
+
+	// Write Dummy Proving Key
+	dummyPkHash, err := writePK(dummyPk, filepath.Join(destination, "dummy.pk"))
+	if err != nil {
+		return fmt.Errorf("failed to write dummy.pk: %w", err)
+	}
+	fmt.Printf("dummy.pk hash: %s\n", dummyPkHash)
+	hashes["dummy.pk"] = dummyPkHash
+
+	// Write Dummy Verifying Key
+	dummyVkHash, err := writeVK(dummyVk, filepath.Join(destination, "dummy.vk"))
+	if err != nil {
+		return fmt.Errorf("failed to write dummy.vk: %w", err)
+	}
+	fmt.Printf("dummy.vk hash: %s\n", dummyVkHash)
+	hashes["dummy.vk"] = dummyVkHash
+
+	// Log the hashes to a text file
+	if err := logHashes("dummy_hashes.txt", hashes, destination); err != nil {
+		return fmt.Errorf("failed to log Aggregator hashes: %w", err)
+	}
+	fmt.Printf("Dummy hashes logged successfully in ./%s/dummy_hashes.txt\n", destination)
+
+	return nil
+}
+
+// generateAggregatorArtifacts handles the generation of Aggregator artifacts
+func generateAggregatorArtifacts(destination string) error {
+	// Check if Vote Verifier artifacts exist
+	dummyCSPath := filepath.Join("dummy", "dummy.ccs")
+	dummyVkPath := filepath.Join("dummy", "dummy.vk")
+	vvVkPath := filepath.Join("voteverifier", "voteverifier.vk")
+
+	if _, err := os.Stat(dummyCSPath); os.IsNotExist(err) {
+		return fmt.Errorf("dummy.ccs not found in dummy. Please generate Vote Verifier artifacts first")
+	}
+	if _, err := os.Stat(dummyVkPath); os.IsNotExist(err) {
+		return fmt.Errorf("dummy.vk not found in dummy. Please generate Vote Verifier artifacts first")
+	}
+	if _, err := os.Stat(vvVkPath); os.IsNotExist(err) {
+		return fmt.Errorf("voteverifier.vk not found in voteverifier. Please generate Vote Verifier artifacts first")
+	}
+
+	// Read Dummy Constraint System
+	dummyCSFile, err := os.Open(dummyCSPath)
+	if err != nil {
+		return fmt.Errorf("failed to open voteverifier.ccs: %w", err)
+	}
+	defer dummyCSFile.Close()
+
+	dummyCS := groth16.NewCS(ecc.BLS12_377)
+	if _, err := dummyCS.ReadFrom(dummyCSFile); err != nil {
+		return fmt.Errorf("failed to read voteverifier.ccs: %w", err)
+	}
+
+	// Read Dummy Verifying Key
+	dummyVkFile, err := os.Open(dummyVkPath)
+	if err != nil {
+		return fmt.Errorf("failed to open dummy.vk: %w", err)
+	}
+	defer dummyVkFile.Close()
+
+	dummyVk := groth16.NewVerifyingKey(ecc.BLS12_377)
+	if _, err := dummyVk.ReadFrom(dummyVkFile); err != nil {
+		return fmt.Errorf("failed to read dummy.vk: %w", err)
 	}
 
 	// Read Vote Verifier Verifying Key
@@ -231,7 +334,7 @@ func generateAggregatorArtifacts(destination string) error {
 	}
 
 	// Compile Aggregator circuit
-	aggCS, dummyCS, dummyVk, err := aggregator.Compile(vvCS, vvVk)
+	aggCS, err := aggregator.Compile(dummyCS, dummyVk, vvVk)
 	if err != nil {
 		return fmt.Errorf("compilation failed: %w", err)
 	}
@@ -247,22 +350,6 @@ func generateAggregatorArtifacts(destination string) error {
 	}
 	fmt.Printf("aggregator.ccs hash: %s\n", aggcsHash)
 	hashes["aggregator.ccs"] = aggcsHash
-
-	// Write Dummy circuit constraints
-	dummycsHash, err := writeCS(dummyCS, filepath.Join(destination, "dummy.ccs"))
-	if err != nil {
-		return fmt.Errorf("failed to write dummy.ccs: %w", err)
-	}
-	fmt.Printf("dummy.ccs hash: %s\n", dummycsHash)
-	hashes["dummy.ccs"] = dummycsHash
-
-	// Write Dummy Proving Key
-	dummyVkHash, err := writePK(dummyVk, filepath.Join(destination, "dummy.pk"))
-	if err != nil {
-		return fmt.Errorf("failed to write dummy.pk: %w", err)
-	}
-	fmt.Printf("dummy.pk hash: %s\n", dummyVkHash)
-	hashes["dummy.pk"] = dummyVkHash
 
 	// Setup Aggregator circuit
 	aggPk, aggVk, err := groth16.Setup(aggCS)
