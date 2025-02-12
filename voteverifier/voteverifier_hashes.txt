@@ -1,3 +1,3 @@
-https://circuits.ams3.cdn.digitaloceanspaces.com/circuits/dev/voteverifier.pk 4bf35e1f0ed36dc2bffa5f66bae476f16e7d03f07a955a5e24eea0e1953d4cec
-https://circuits.ams3.cdn.digitaloceanspaces.com/circuits/dev/voteverifier.vk 7f7284e2427269569bc1678ceaa681407081cd558265e630e9473d8afee9886f
-https://circuits.ams3.cdn.digitaloceanspaces.com/circuits/dev/voteverifier.ccs e6e5e27a311c04ffe7894494e614f1cf28067df357b1d55b38855b8351e01f79
+https://circuits.ams3.cdn.digitaloceanspaces.com/dev/voteverifier.ccs e6e5e27a311c04ffe7894494e614f1cf28067df357b1d55b38855b8351e01f79
+https://circuits.ams3.cdn.digitaloceanspaces.com/dev/voteverifier.pk 53868690656c012b93c50dd33c92a8642d3b6947b63378278cabd3767fa05dcb
+https://circuits.ams3.cdn.digitaloceanspaces.com/dev/voteverifier.vk 25d9b8a646190527fcbf2afc601c59da5fd2023e7dee64134a9af2089b061ff9

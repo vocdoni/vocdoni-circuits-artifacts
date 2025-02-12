@@ -21,7 +21,7 @@ import (
 	"github.com/vocdoni/vocdoni-circuits-artifacts/voteverifier"
 )
 
-const artifactBaseURL = "https://circuits.ams3.cdn.digitaloceanspaces.com/circuits/dev"
+const artifactBaseURL = "https://circuits.ams3.cdn.digitaloceanspaces.com/dev"
 
 func main() {
 	// Handle interrupt signals gracefully
