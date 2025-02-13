@@ -1,3 +1,3 @@
-https://circuits.ams3.cdn.digitaloceanspaces.com/dev/aggregator.vk a84b2cd6f8fdc43d71320233372fa275cf9f0e5a0f710c10ec59fc58a346b008
-https://circuits.ams3.cdn.digitaloceanspaces.com/dev/aggregator.ccs e48d63c1c13cdc100b7c66b75fbc2a9d4b284a2998a1357b413dc1e3c618864d
-https://circuits.ams3.cdn.digitaloceanspaces.com/dev/aggregator.pk d48ecc28294507da81d4524e626784d47b0741c10d8ac13aa54bb47aab8276de
+https://circuits.ams3.cdn.digitaloceanspaces.com/dev/aggregator.ccs 91968f322f6ebcb386abc0ad931639f5e8272fb0d511e47f0a27eeb2ba4f1813
+https://circuits.ams3.cdn.digitaloceanspaces.com/dev/aggregator.pk cc9c84321e1511345ea1439d9592727bb721d74d14ca32670098a90180cd4b1a
+https://circuits.ams3.cdn.digitaloceanspaces.com/dev/aggregator.vk 382889114ac9c697d6a4e0b26b6dff4d4ba0dfa8683c2de96ad8f8f46f1775e0

@@ -8,7 +8,7 @@ require (
 	github.com/consensys/gnark v0.11.1-0.20241210204654-a1e66c1d6b4d
 	github.com/consensys/gnark-crypto v0.16.0
 	github.com/manifoldco/promptui v0.9.0
-	github.com/vocdoni/vocdoni-z-sandbox v0.0.0-20250206114113-928e9445868b
+	github.com/vocdoni/vocdoni-z-sandbox v0.0.0-20250213082757-b64c60fcda5d
 )
 
 require (
@@ -17,6 +17,7 @@ require (
 	github.com/chzyer/readline v1.5.1 // indirect
 	github.com/consensys/bavard v0.1.29 // indirect
 	github.com/dchest/blake512 v1.0.0 // indirect
+	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.3.0 // indirect
 	github.com/ethereum/go-ethereum v1.14.12 // indirect
 	github.com/fxamacker/cbor/v2 v2.7.0 // indirect
 	github.com/google/pprof v0.0.0-20241101162523-b92577c0c142 // indirect
@@ -33,7 +34,7 @@ require (
 	github.com/sethvargo/go-retry v0.2.4 // indirect
 	github.com/vocdoni/arbo v0.0.0-20241217102805-a7c0c5f8c359 // indirect
 	github.com/vocdoni/circom2gnark v1.0.1-0.20241204100355-b93800bd88a4 // indirect
-	github.com/vocdoni/gnark-crypto-primitives v0.0.2-0.20250131175027-569f9935e2ab // indirect
+	github.com/vocdoni/gnark-crypto-primitives v0.0.2-0.20250210155802-bbf571616e03 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.vocdoni.io/dvote v1.10.2-0.20241024102542-c1ce6d744bc5 // indirect

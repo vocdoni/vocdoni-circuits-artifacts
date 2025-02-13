@@ -39,6 +39,8 @@ github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/dchest/blake512 v1.0.0 h1:oDFEQFIqFSeuA34xLtXZ/rWxCXdSjirjzPhey5EUvmA=
 github.com/dchest/blake512 v1.0.0/go.mod h1:FV1x7xPPLWukZlpDpWQ88rF/SFwZ5qbskrzhLMB92JI=
+github.com/decred/dcrd/crypto/blake256 v1.0.1 h1:7PltbUIQB7u/FfZ39+DGa/ShuMyJ5ilcvdfma9wOH6Y=
+github.com/decred/dcrd/crypto/blake256 v1.0.1/go.mod h1:2OfgNZ5wDpcsFmHmCK5gZTPcCXqlm2ArzUIkw9czNJo=
 github.com/decred/dcrd/dcrec/secp256k1/v4 v4.3.0 h1:rpfIENRNNilwHwZeG5+P150SMrnNEcHYvcCuK6dPZSg=
 github.com/decred/dcrd/dcrec/secp256k1/v4 v4.3.0/go.mod h1:v57UDF4pDQJcEfFUCRop3lJL149eHGSe9Jvczhzjo/0=
 github.com/dustin/go-humanize v1.0.1 h1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=
@@ -142,10 +144,10 @@ github.com/vocdoni/arbo v0.0.0-20241217102805-a7c0c5f8c359 h1:T35/NQ3qL9tsWZxslx
 github.com/vocdoni/arbo v0.0.0-20241217102805-a7c0c5f8c359/go.mod h1:wXxPP+5vkT5t54lrKz6bCXKIyv8aRplKq8uCFb2wgy4=
 github.com/vocdoni/circom2gnark v1.0.1-0.20241204100355-b93800bd88a4 h1:aYeMlhWAW+/OQs9BinA8Yetjcf5IPoCsFFtxXx3uLdc=
 github.com/vocdoni/circom2gnark v1.0.1-0.20241204100355-b93800bd88a4/go.mod h1:A1WU0hL7rO9oZlvp82you2uCc4T3/ySi1UNW6N6hBJs=
-github.com/vocdoni/gnark-crypto-primitives v0.0.2-0.20250131175027-569f9935e2ab h1:3bkT6syvW2sSW23A9LGvZTrLynpmGzgHUNo9eBWwHBI=
-github.com/vocdoni/gnark-crypto-primitives v0.0.2-0.20250131175027-569f9935e2ab/go.mod h1:SWuNIPw2nWhnyLNWnLj2c/6U/51LCGrbx/nLM5E4Lig=
-github.com/vocdoni/vocdoni-z-sandbox v0.0.0-20250206114113-928e9445868b h1:7ei87Le1NuJN0fT+KqwAzkBuf61lqBlLdsjZOUI1sDQ=
-github.com/vocdoni/vocdoni-z-sandbox v0.0.0-20250206114113-928e9445868b/go.mod h1:zH5uQs3xwcY5KFkpJxln9dQEtARdAROJhTtmmXJEjzs=
+github.com/vocdoni/gnark-crypto-primitives v0.0.2-0.20250210155802-bbf571616e03 h1:+8J6fLCBonn+1CTkNNgR5X4/Y7/WHQS36Jj66J1wRfs=
+github.com/vocdoni/gnark-crypto-primitives v0.0.2-0.20250210155802-bbf571616e03/go.mod h1:SWuNIPw2nWhnyLNWnLj2c/6U/51LCGrbx/nLM5E4Lig=
+github.com/vocdoni/vocdoni-z-sandbox v0.0.0-20250213082757-b64c60fcda5d h1:gIY2QfGdKj1F1cLDJzNUs0R0V8UIFqCosb60qP37lh0=
+github.com/vocdoni/vocdoni-z-sandbox v0.0.0-20250213082757-b64c60fcda5d/go.mod h1:/N0sW2o9hObjHOhDiBPsy06QqSCbkGCGB99Xk9JmE6E=
 github.com/x448/float16 v0.8.4 h1:qLwI1I70+NjRFUR3zs1JPUCgaCXSh3SW62uAKT1mSBM=
 github.com/x448/float16 v0.8.4/go.mod h1:14CWIYCyZA/cWjXOioeEpHeN/83MdbZDRQHoFcYsOfg=
 go.uber.org/multierr v1.11.0 h1:blXXJkSxSSfBVBlC76pxqeO+LN3aDfLQo+309xJstO0=
