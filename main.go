@@ -17,6 +17,7 @@ import (
 	"github.com/manifoldco/promptui"
 	"github.com/vocdoni/vocdoni-circuits-artifacts/aggregator"
 	"github.com/vocdoni/vocdoni-circuits-artifacts/dummy"
+	"github.com/vocdoni/vocdoni-circuits-artifacts/statetransition"
 	"github.com/vocdoni/vocdoni-circuits-artifacts/voteverifier"
 	"github.com/vocdoni/vocdoni-z-sandbox/circuits"
 )
@@ -38,9 +39,10 @@ func main() {
 	voteVerifierDest := filepath.Join("voteverifier")
 	dummyDest := filepath.Join("dummy")
 	aggregatorDest := filepath.Join("aggregator")
+	statetransitionDest := filepath.Join("statetransition")
 
 	// Create artifact directories if they don't exist
-	dirs := []string{voteVerifierDest, aggregatorDest}
+	dirs := []string{voteVerifierDest, aggregatorDest, statetransitionDest}
 	for _, dir := range dirs {
 		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
 			log.Fatalf("Failed to create directory %s: %v", dir, err)
@@ -55,13 +57,13 @@ func main() {
 				"Generate Vote Verifier Artifacts",
 				"Generate Dummy Vote Verifier Artifacts",
 				"Generate Aggregator Artifacts",
+				"Generate StateTransition Artifacts",
 				"Generate All",
 				"Exit",
 			},
 		}
 
 		_, result, err := prompt.Run()
-
 		if err != nil {
 			log.Printf("Prompt failed: %v\n", err)
 			continue
@@ -80,6 +82,10 @@ func main() {
 			if err := generateAggregatorArtifacts(aggregatorDest); err != nil {
 				log.Printf("Error generating Aggregator artifacts: %v", err)
 			}
+		case "Generate StateTransition Artifacts":
+			if err := generateStateTransitionArtifacts(statetransitionDest); err != nil {
+				log.Printf("Error generating StateTransition artifacts: %v", err)
+			}
 		case "Generate All":
 			if err := generateVoteVerifierArtifacts(voteVerifierDest); err != nil {
 				log.Printf("Error generating Vote Verifier artifacts: %v", err)
@@ -91,6 +97,9 @@ func main() {
 			}
 			if err := generateAggregatorArtifacts(aggregatorDest); err != nil {
 				log.Printf("Error generating Aggregator artifacts: %v", err)
+			}
+			if err := generateStateTransitionArtifacts(statetransitionDest); err != nil {
+				log.Printf("Error generating StateTransition artifacts: %v", err)
 			}
 		case "Exit":
 			fmt.Println("Exiting...")
@@ -381,6 +390,92 @@ func generateAggregatorArtifacts(destination string) error {
 		return fmt.Errorf("failed to log Aggregator hashes: %w", err)
 	}
 	fmt.Printf("Aggregator hashes logged successfully in ./%s/aggregator_hashes.txt\n", destination)
+
+	return nil
+}
+
+// generateStateTransitionArtifacts handles the generation of StateTransition artifacts
+func generateStateTransitionArtifacts(destination string) error {
+	// Check if Aggregator artifacts exist
+	agCSPath := filepath.Join("aggregator", "aggregator.ccs")
+	agVkPath := filepath.Join("aggregator", "aggregator.vk")
+
+	if _, err := os.Stat(agCSPath); os.IsNotExist(err) {
+		return fmt.Errorf("aggregator.ccs not found in aggregator. Please generate Aggregator artifacts first")
+	}
+	if _, err := os.Stat(agVkPath); os.IsNotExist(err) {
+		return fmt.Errorf("aggregator.vk not found in aggregator. Please generate Aggregator artifacts first")
+	}
+
+	// Read Aggregator Constraint System
+	agCSFile, err := os.Open(agCSPath)
+	if err != nil {
+		return fmt.Errorf("failed to open aggregator.ccs: %w", err)
+	}
+	defer agCSFile.Close()
+
+	agCS := groth16.NewCS(circuits.AggregatorCurve)
+	if _, err := agCS.ReadFrom(agCSFile); err != nil {
+		return fmt.Errorf("failed to read aggregator.ccs: %w", err)
+	}
+
+	// Read Aggregator Verifying Key
+	agVkFile, err := os.Open(agVkPath)
+	if err != nil {
+		return fmt.Errorf("failed to open aggregator.vk: %w", err)
+	}
+	defer agVkFile.Close()
+
+	agVk := groth16.NewVerifyingKey(circuits.AggregatorCurve)
+	if _, err := agVk.ReadFrom(agVkFile); err != nil {
+		return fmt.Errorf("failed to read aggregator.vk: %w", err)
+	}
+
+	// Compile StateTransition circuit
+	stCCS, err := statetransition.Compile(agCS, agVk)
+	if err != nil {
+		return fmt.Errorf("compilation failed: %w", err)
+	}
+	fmt.Println("StateTransition circuit compiled successfully.")
+
+	// Initialize a map to store hashes
+	hashes := make(map[string]string)
+
+	// Write StateTransition circuit constraints
+	stCCSHash, err := writeCS(stCCS, filepath.Join(destination, "statetransition.ccs"))
+	if err != nil {
+		return fmt.Errorf("failed to write statetransition.ccs: %w", err)
+	}
+	fmt.Printf("statetransition.ccs hash: %s\n", stCCSHash)
+	hashes["statetransition.ccs"] = stCCSHash
+
+	// Setup StateTransition circuit
+	stPk, agVk, err := groth16.Setup(stCCS)
+	if err != nil {
+		return fmt.Errorf("Groth16 setup failed: %w", err)
+	}
+
+	// Write StateTransition Proving Key
+	stPkHash, err := writePK(stPk, filepath.Join(destination, "statetransition.pk"))
+	if err != nil {
+		return fmt.Errorf("failed to write statetransition.pk: %w", err)
+	}
+	fmt.Printf("statetransition.pk hash: %s\n", stPkHash)
+	hashes["statetransition.pk"] = stPkHash
+
+	// Write StateTransition Verifying Key
+	stVkHash, err := writeVK(agVk, filepath.Join(destination, "statetransition.vk"))
+	if err != nil {
+		return fmt.Errorf("failed to write statetransition.vk: %w", err)
+	}
+	fmt.Printf("statetransition.vk hash: %s\n", stVkHash)
+	hashes["statetransition.vk"] = stVkHash
+
+	// Log the hashes to a text file
+	if err := logHashes("statetransition_hashes.txt", hashes, destination); err != nil {
+		return fmt.Errorf("failed to log StateTransition hashes: %w", err)
+	}
+	fmt.Printf("StateTransition hashes logged successfully in ./%s/statetransition_hashes.txt\n", destination)
 
 	return nil
 }
