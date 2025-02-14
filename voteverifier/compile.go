@@ -1,7 +1,6 @@
 package voteverifier
 
 import (
-	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark/constraint"
 	"github.com/consensys/gnark/frontend"
 	"github.com/consensys/gnark/frontend/cs/r1cs"
@@ -16,7 +15,7 @@ func Compile(ballotProofVKey []byte) (constraint.ConstraintSystem, error) {
 		return nil, err
 	}
 	// compile the circuit
-	return frontend.Compile(ecc.BLS12_377.ScalarField(), r1cs.NewBuilder, &voteverifier.VerifyVoteCircuit{
+	return frontend.Compile(circuits.VoteVerifierCurve.ScalarField(), r1cs.NewBuilder, &voteverifier.VerifyVoteCircuit{
 		CircomVerificationKey: placeholders.Vk,
 		CircomProof:           placeholders.Proof,
 	})

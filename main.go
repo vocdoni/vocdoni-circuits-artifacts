@@ -12,13 +12,13 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/constraint"
 	"github.com/manifoldco/promptui"
 	"github.com/vocdoni/vocdoni-circuits-artifacts/aggregator"
 	"github.com/vocdoni/vocdoni-circuits-artifacts/dummy"
 	"github.com/vocdoni/vocdoni-circuits-artifacts/voteverifier"
+	"github.com/vocdoni/vocdoni-z-sandbox/circuits"
 )
 
 const artifactBaseURL = "https://circuits.ams3.cdn.digitaloceanspaces.com/dev"
@@ -225,7 +225,7 @@ func generateDummyArtifacts(destination string) error {
 		return fmt.Errorf("failed to open voteverifier.ccs: %w", err)
 	}
 	defer vvCSFile.Close()
-	vvCS := groth16.NewCS(ecc.BLS12_377)
+	vvCS := groth16.NewCS(circuits.VoteVerifierCurve)
 	if _, err := vvCS.ReadFrom(vvCSFile); err != nil {
 		return fmt.Errorf("failed to read voteverifier.ccs: %w", err)
 	}
@@ -236,7 +236,7 @@ func generateDummyArtifacts(destination string) error {
 		return fmt.Errorf("failed to open voteverifier.vk: %w", err)
 	}
 	defer vvVkFile.Close()
-	vvVk := groth16.NewVerifyingKey(ecc.BLS12_377)
+	vvVk := groth16.NewVerifyingKey(circuits.VoteVerifierCurve)
 	if _, err := vvVk.ReadFrom(vvVkFile); err != nil {
 		return fmt.Errorf("failed to read voteverifier.vk: %w", err)
 	}
@@ -304,7 +304,7 @@ func generateAggregatorArtifacts(destination string) error {
 	}
 	defer dummyCSFile.Close()
 
-	dummyCS := groth16.NewCS(ecc.BLS12_377)
+	dummyCS := groth16.NewCS(circuits.VoteVerifierCurve)
 	if _, err := dummyCS.ReadFrom(dummyCSFile); err != nil {
 		return fmt.Errorf("failed to read voteverifier.ccs: %w", err)
 	}
@@ -316,7 +316,7 @@ func generateAggregatorArtifacts(destination string) error {
 	}
 	defer dummyVkFile.Close()
 
-	dummyVk := groth16.NewVerifyingKey(ecc.BLS12_377)
+	dummyVk := groth16.NewVerifyingKey(circuits.VoteVerifierCurve)
 	if _, err := dummyVk.ReadFrom(dummyVkFile); err != nil {
 		return fmt.Errorf("failed to read dummy.vk: %w", err)
 	}
@@ -328,7 +328,7 @@ func generateAggregatorArtifacts(destination string) error {
 	}
 	defer vvVkFile.Close()
 
-	vvVk := groth16.NewVerifyingKey(ecc.BLS12_377)
+	vvVk := groth16.NewVerifyingKey(circuits.VoteVerifierCurve)
 	if _, err := vvVk.ReadFrom(vvVkFile); err != nil {
 		return fmt.Errorf("failed to read voteverifier.vk: %w", err)
 	}

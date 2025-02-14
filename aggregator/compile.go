@@ -3,7 +3,6 @@ package aggregator
 import (
 	"fmt"
 
-	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/constraint"
 	"github.com/consensys/gnark/frontend"
@@ -34,7 +33,7 @@ func Compile(dummyCCS constraint.ConstraintSystem, dummyVk, innerVk groth16.Veri
 		proofs[i] = proofPlaceholder
 	}
 	// compile the final circuit
-	ccs, err := frontend.Compile(ecc.BW6_761.ScalarField(), r1cs.NewBuilder, &aggregator.AggregatorCircuit{
+	ccs, err := frontend.Compile(circuits.AggregatorCurve.ScalarField(), r1cs.NewBuilder, &aggregator.AggregatorCircuit{
 		Proofs:               proofs,
 		BaseVerificationKey:  recursiveInnerVk,
 		DummyVerificationKey: recursiveDummyVk,
