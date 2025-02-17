@@ -7,6 +7,7 @@ replace github.com/consensys/gnark => github.com/lucasmenendez/gnark v0.5.2-0.20
 require (
 	github.com/consensys/gnark v0.11.1-0.20241210204654-a1e66c1d6b4d
 	github.com/manifoldco/promptui v0.9.0
+	github.com/rs/zerolog v1.33.0
 	github.com/vocdoni/vocdoni-z-sandbox v0.0.0-20250217071243-45ca3bdc9156
 )
 
@@ -31,7 +32,6 @@ require (
 	github.com/mmcloughlin/addchain v0.4.0 // indirect
 	github.com/pressly/goose/v3 v3.21.1 // indirect
 	github.com/ronanh/intcomp v1.1.0 // indirect
-	github.com/rs/zerolog v1.33.0 // indirect
 	github.com/sethvargo/go-retry v0.2.4 // indirect
 	github.com/vocdoni/arbo v0.0.0-20241217102805-a7c0c5f8c359 // indirect
 	github.com/vocdoni/circom2gnark v1.0.1-0.20241204100355-b93800bd88a4 // indirect
