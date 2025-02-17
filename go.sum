@@ -146,8 +146,8 @@ github.com/vocdoni/circom2gnark v1.0.1-0.20241204100355-b93800bd88a4 h1:aYeMlhWA
 github.com/vocdoni/circom2gnark v1.0.1-0.20241204100355-b93800bd88a4/go.mod h1:A1WU0hL7rO9oZlvp82you2uCc4T3/ySi1UNW6N6hBJs=
 github.com/vocdoni/gnark-crypto-primitives v0.0.2-0.20250210155802-bbf571616e03 h1:+8J6fLCBonn+1CTkNNgR5X4/Y7/WHQS36Jj66J1wRfs=
 github.com/vocdoni/gnark-crypto-primitives v0.0.2-0.20250210155802-bbf571616e03/go.mod h1:SWuNIPw2nWhnyLNWnLj2c/6U/51LCGrbx/nLM5E4Lig=
-github.com/vocdoni/vocdoni-z-sandbox v0.0.0-20250213082757-b64c60fcda5d h1:gIY2QfGdKj1F1cLDJzNUs0R0V8UIFqCosb60qP37lh0=
-github.com/vocdoni/vocdoni-z-sandbox v0.0.0-20250213082757-b64c60fcda5d/go.mod h1:/N0sW2o9hObjHOhDiBPsy06QqSCbkGCGB99Xk9JmE6E=
+github.com/vocdoni/vocdoni-z-sandbox v0.0.0-20250217071243-45ca3bdc9156 h1:k7qNXDdQ2HEYqFCsC7qugHu5yuWnZvwL/x8kPu0d8LE=
+github.com/vocdoni/vocdoni-z-sandbox v0.0.0-20250217071243-45ca3bdc9156/go.mod h1:/N0sW2o9hObjHOhDiBPsy06QqSCbkGCGB99Xk9JmE6E=
 github.com/x448/float16 v0.8.4 h1:qLwI1I70+NjRFUR3zs1JPUCgaCXSh3SW62uAKT1mSBM=
 github.com/x448/float16 v0.8.4/go.mod h1:14CWIYCyZA/cWjXOioeEpHeN/83MdbZDRQHoFcYsOfg=
 go.uber.org/multierr v1.11.0 h1:blXXJkSxSSfBVBlC76pxqeO+LN3aDfLQo+309xJstO0=
