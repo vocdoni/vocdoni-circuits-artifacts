@@ -206,7 +206,7 @@ func generateVoteVerifierArtifacts(destination string) error {
 	return nil
 }
 
-// generateDummyArtifacts handles the generation of Aggregator artifacts
+// generateDummyArtifacts handles the generation of Dummy artifacts
 func generateDummyArtifacts(destination string) error {
 	// Check if Vote Verifier artifacts exist
 	vvCSPath := filepath.Join("voteverifier", "voteverifier.ccs")
@@ -246,6 +246,9 @@ func generateDummyArtifacts(destination string) error {
 
 	// Compile Dummy circuit
 	dummyCS, dummyPk, dummyVk, err := dummy.Compile(vvCS)
+	if err != nil {
+		return fmt.Errorf("failed to compile dummy: %w", err)
+	}
 
 	// Write Dummy circuit constraints
 	dummycsHash, err := writeCS(dummyCS, filepath.Join(destination, "dummy.ccs"))
@@ -273,7 +276,7 @@ func generateDummyArtifacts(destination string) error {
 
 	// Log the hashes to a text file
 	if err := logHashes("dummy_hashes.txt", hashes, destination); err != nil {
-		return fmt.Errorf("failed to log Aggregator hashes: %w", err)
+		return fmt.Errorf("failed to log Dummy hashes: %w", err)
 	}
 	fmt.Printf("Dummy hashes logged successfully in ./%s/dummy_hashes.txt\n", destination)
 
@@ -419,7 +422,7 @@ func write(content bytes.Buffer, to string) (string, error) {
 	hash := hex.EncodeToString(hashFn.Sum(nil))
 
 	// Write to file
-	if err := os.WriteFile(to, content.Bytes(), 0644); err != nil {
+	if err := os.WriteFile(to, content.Bytes(), 0o644); err != nil {
 		return "", fmt.Errorf("failed to write to file %s: %w", to, err)
 	}
 
