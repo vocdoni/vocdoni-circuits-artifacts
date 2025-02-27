@@ -1,3 +1,0 @@
-https://circuits.ams3.cdn.digitaloceanspaces.com/dev/dummy.ccs 8f664d05cdd01567e947e2ffdb7a4f3e5ccf762c51c8746214008f263a5f3ca9
-https://circuits.ams3.cdn.digitaloceanspaces.com/dev/dummy.pk b07dd2f1aaa3f54d2d9ff5f9241deaef89b71d78c8c6e2b0ca0ec85fa3862ed4
-https://circuits.ams3.cdn.digitaloceanspaces.com/dev/dummy.vk db612b982d6318d5a545a05c4b322a19114cd245d8a9565b184513a1a04c31fa

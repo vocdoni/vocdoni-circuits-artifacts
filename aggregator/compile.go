@@ -13,30 +13,27 @@ import (
 	"github.com/vocdoni/vocdoni-z-sandbox/circuits/aggregator"
 )
 
-func Compile(dummyCCS constraint.ConstraintSystem, dummyVk, innerVk groth16.VerifyingKey) (constraint.ConstraintSystem, error) {
+func Compile(innerCCS constraint.ConstraintSystem, innerVk groth16.VerifyingKey) (constraint.ConstraintSystem, error) {
 	// fix the inner vk
 	recursiveInnerVk, err := stdgroth16.ValueOfVerifyingKeyFixed[sw_bls12377.G1Affine, sw_bls12377.G2Affine, sw_bls12377.GT](innerVk)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert inner vk to fixed: %w", err)
 	}
-	// fix the dummy vk
-	recursiveDummyVk, err := stdgroth16.ValueOfVerifyingKeyFixed[sw_bls12377.G1Affine, sw_bls12377.G2Affine, sw_bls12377.GT](dummyVk)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert dummy vk to fixed: %w", err)
-	}
 	// generate dummy proofs and witness to fill the placeholders
-	proofPlaceholder := stdgroth16.PlaceholderProof[sw_bls12377.G1Affine, sw_bls12377.G2Affine](dummyCCS)
+	proofPlaceholder := stdgroth16.PlaceholderProof[sw_bls12377.G1Affine, sw_bls12377.G2Affine](innerCCS)
+	witnessPlaceholder := stdgroth16.PlaceholderWitness[sw_bls12377.ScalarField](innerCCS)
 	// copy the placeholders up to the max number of votes
 	proofs := [circuits.VotesPerBatch]stdgroth16.Proof[sw_bls12377.G1Affine, sw_bls12377.G2Affine]{}
-	// var dummyEncryptedBallots [circuits.VotesPerBatch][circuits.FieldsPerBallot][2][2]frontend.Variable
+	witnesses := [circuits.VotesPerBatch]stdgroth16.Witness[sw_bls12377.ScalarField]{}
 	for i := 0; i < circuits.VotesPerBatch; i++ {
 		proofs[i] = proofPlaceholder
+		witnesses[i] = witnessPlaceholder
 	}
 	// compile the final circuit
 	ccs, err := frontend.Compile(circuits.AggregatorCurve.ScalarField(), r1cs.NewBuilder, &aggregator.AggregatorCircuit{
-		Proofs:               proofs,
-		BaseVerificationKey:  recursiveInnerVk,
-		DummyVerificationKey: recursiveDummyVk,
+		Proofs:          proofs,
+		Witnesses:       witnesses,
+		VerificationKey: recursiveInnerVk,
 	})
 	return ccs, err
 }
